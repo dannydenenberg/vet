@@ -1,7 +1,13 @@
 <template>
   <div>
     <h1>🦧 Tippi's Doses 🐄</h1>Weight of Animal (kg):
-    <input v-model="weight" placeholder="89" value="89" />
+    <input
+      pattern="[0-9]*"
+      type="number"
+      v-model="weight"
+      placeholder="89"
+      value="89"
+    />
     <p>Message is: {{ weight }}</p>
     <div class="results">
       <ul>
