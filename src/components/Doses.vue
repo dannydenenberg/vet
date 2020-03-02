@@ -8,7 +8,14 @@
       placeholder="89"
       value="89"
     />
-    <p>Message is: {{ weight }}</p>
+
+    <p>
+      Weight of Animal 🦥:
+      <strong>
+        {{ weight }}
+        <span v-if="weight.length>0">kg</span>
+      </strong>
+    </p>
     <div class="results">
       <ul>
         <li v-for="medication in arrayOfMedications" :key="medication.name">

@@ -14,17 +14,17 @@
 // dog: [1,2] (range of values in ml)
 // cat: [1,2] (range of values in ml)
 // canGive: ['IV', 'IM', 'PO']
-// q: 72 (every 72 hours)
+// q: [3,5] (every 3 to 5 hours)
 const meds = {
-  buprenorphine: weight => {
-    const q = weight + 72;
+  Buprenorphine: weight => {
+    const q = [8, 12];
     const canGive = ["IV", "IM", "PO"];
-    const dogs = [1.2, 4];
-    const cats = [1.2, 4];
+    const dogs = [weight*.01/.3, weight*.02/.3];
+    const cats = [weight*.01/.3, weight*.02/.3];
     return { dogs, cats, canGive, q };
   },
-  tramadol: weight => {
-    const q = weight * 72;
+  Tramadol: weight => {
+    const q = [6 + weight]; // every six hours
     const canGive = ["PO"];
     const dogs = [12323, 4];
     const cats = [13444, 2];
