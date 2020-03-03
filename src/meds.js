@@ -34,4 +34,10 @@ const meds = {
   }
 };
 
+// class Medicine {
+//   constructor() {
+
+//   }
+// }
+
 export default meds;

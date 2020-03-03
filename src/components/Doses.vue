@@ -1,15 +1,22 @@
 <template>
   <div>
     <h1>🦧 Tippi's Doses 🐄</h1>
-    Weight of Animal (kg):
-    <input pattern="[0-9]*" type="number" v-model="weightInput" />
-    {{ " " }}
-    <b-form-select
-      style="width:auto"
-      v-model="weightUnit"
-      :options="weightUnitOptions"
-    ></b-form-select>
-
+    <p>
+      Weight of Animal (kg):
+      <!-- <input pattern="[0-9]*" type="number" v-model="weightInput" /> -->
+      <b-form-input
+        pattern="[0-9]*"
+        type="number"
+        v-model="weightInput"
+        style="width:auto; display:inline"
+      ></b-form-input>
+      {{ " " }}
+      <b-form-select
+        style="width:auto"
+        v-model="weightUnit"
+        :options="weightUnitOptions"
+      ></b-form-select>
+    </p>
     <p>
       Weight of Animal 🦥:
       <strong>
@@ -42,12 +49,9 @@
 </template>
 
 <script>
-import Medication from "./Medication";
 import meds from "./../meds";
 export default {
-  components: {
-    Medication
-  },
+  components: {},
   data() {
     return {
       tableFields: [
