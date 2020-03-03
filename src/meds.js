@@ -19,16 +19,18 @@ const meds = {
   Buprenorphine: weight => {
     const q = [8, 12];
     const canGive = ["IV", "IM", "PO"];
-    const dogs = [weight*.01/.3, weight*.02/.3];
-    const cats = [weight*.01/.3, weight*.02/.3];
-    return { dogs, cats, canGive, q };
+    const dogs = [(weight * 0.01) / 0.3, (weight * 0.02) / 0.3];
+    const cats = [(weight * 0.01) / 0.3, (weight * 0.02) / 0.3];
+    const dosage = [0.01, 0.02];
+    return { dosage, dogs, cats, canGive, q };
   },
   Tramadol: weight => {
     const q = [6 + weight]; // every six hours
     const canGive = ["PO"];
     const dogs = [12323, 4];
     const cats = [13444, 2];
-    return { dogs, cats, canGive, q };
+    const dosage = [0.01, 0.02];
+    return { dosage, dogs, cats, canGive, q };
   }
 };
 
