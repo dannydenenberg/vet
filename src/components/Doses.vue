@@ -12,6 +12,7 @@
       ></b-form-input>
       {{ " " }}
       <b-form-select
+        value="Kilograms"
         style="width:auto"
         v-model="weightUnit"
         :options="weightUnitOptions"
@@ -31,16 +32,23 @@
       :items="medicationsObjectsArrayToOutputStringsForTable"
       :dark="true"
       :fixed="true"
-      :headVariant="'light'"
+      :headVariant="'dark'"
       :no-border-collapse="true"
-    ></b-table>
+    >
+      <template v-slot:cell(med)="data">
+        <!-- <a v-html="data.value" href="hey"></a> -->
+        <span :id="`med-${data.value}`">{{data.value}}</span>
+        <b-popover variant="info" :target="`med-${data.value}`" triggers="hover" placement="top">
+          <template v-slot:title>{{data.value}}</template>
+          I am popover
+          <b>component</b> content!
+        </b-popover>
+      </template>
+    </b-table>
 
     <div class="results">
       <ul>
-        <li
-          v-for="medication in arrayOfMedicationsProcess"
-          :key="medication.name"
-        >
+        <li v-for="medication in arrayOfMedicationsProcess" :key="medication.name">
           <Medication v-bind:info="medication" />
         </li>
       </ul>
@@ -55,12 +63,13 @@ export default {
   data() {
     return {
       tableFields: [
-        { key: "med", label: "Med" },
-        { key: "dosage", label: "Dosage (mg/kg)" },
+        { key: "med", label: "Med", sortable: true, "primary-key": "dodo" },
+        // { key: "dosage", label: "Dosage (mg/kg)" },
         { key: "forDogs", label: "For Dogs (ml)" },
         { key: "forCats", label: "For Cats (ml)" },
         { key: "canGive", label: "Can Give" },
-        { key: "q", label: "Q (hours)" }
+        { key: "q", label: "Q (hours)" },
+        { key: "notes", label: "Notes" }
       ],
       weightInput: "89",
       items: [
@@ -73,7 +82,7 @@ export default {
       weightUnitOptions: [
         // { value: null, text: "Please select an option" },
         { value: "lb", text: "Pounds" },
-        { value: "kg", text: "Kilograms" }
+        { value: "kg", text: "Kilograms", selected: true }
       ]
     };
   },
@@ -98,19 +107,12 @@ export default {
 
       /*** Edit sig figs in dosages ***/
       for (let i = 0; i < medicationsObjectArray.length; i++) {
-        medicationsObjectArray[i].dogs[0] = +medicationsObjectArray[
-          i
-        ].dogs[0].toFixed(sigFigs);
-        medicationsObjectArray[i].dogs[1] = +medicationsObjectArray[
-          i
-        ].dogs[1].toFixed(sigFigs);
-
-        medicationsObjectArray[i].cats[0] = +medicationsObjectArray[
-          i
-        ].cats[0].toFixed(sigFigs);
-        medicationsObjectArray[i].cats[1] = +medicationsObjectArray[
-          i
-        ].cats[1].toFixed(sigFigs);
+        medicationsObjectArray[i].dogs = medicationsObjectArray[i].dogs.map(
+          number => +number.toFixed(sigFigs)
+        );
+        medicationsObjectArray[i].cats = medicationsObjectArray[i].cats.map(
+          number => +number.toFixed(sigFigs)
+        );
       }
 
       let forTableArray = [];
@@ -122,9 +124,10 @@ export default {
         const forCats = o.cats.join(" to ");
         const canGive = o.canGive.join(", ");
         const q = o.q.join("-");
-        const dosage = o.dosage.join("-");
+        const notes = o.notes;
+        // const dosage = o.dosage.join("-");
 
-        forTableArray.push({ med, dosage, forDogs, forCats, canGive, q });
+        forTableArray.push({ med, forDogs, forCats, canGive, q, notes });
       });
       return forTableArray;
     }
@@ -154,6 +157,7 @@ export default {
       return medicationsList;
     },
 
+    // In the future, use this to return only medicines associated with a given disease.
     filterMedications(medicationsList) {
       return medicationsList;
     }
