@@ -13,7 +13,7 @@ function completeDosageObject(
   mgPerML,
   q,
   canGive,
-  notes
+  tabs
 ) {
   let dogs = mgPerKgDOG.map((a) => doseInML(weight, a, mgPerML));
   let cats = mgPerKgCAT.map((a) => doseInML(weight, a, mgPerML));
@@ -24,7 +24,17 @@ function completeDosageObject(
     cats = [];
   }
 
-  return { weight, dogs, cats, canGive, q, notes };
+  return {
+    mgPerKgDOG, // extra data on med
+    mgPerKgCAT, // extra data on med
+    mgPerML, // extra data on med
+    weight,
+    dogs,
+    cats,
+    canGive,
+    q,
+    tabs,
+  };
 }
 
 // name: String (name of medication all LOWERCASE)

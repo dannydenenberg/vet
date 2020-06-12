@@ -36,12 +36,17 @@
       :no-border-collapse="true"
     >
       <template v-slot:cell(med)="data">
-        <!-- <a v-html="data.value" href="hey"></a> -->
         <span :id="`med-${data.value}`">{{data.value}}</span>
         <b-popover variant="info" :target="`med-${data.value}`" triggers="hover" placement="top">
           <template v-slot:title>{{data.value}}</template>
-          I am popover
-          <b>component</b> content!
+          <p
+            id="med-info-p"
+            v-for="(value, propName) in medNamesAndInfo[data.value]"
+            :key="propName"
+          >
+            <b>{{propName}}</b>:
+            <span>{{value}}</span>
+          </p>
         </b-popover>
       </template>
     </b-table>
@@ -62,6 +67,7 @@ export default {
   components: {},
   data() {
     return {
+      medNamesAndInfo: {}, // object with keys as the names and mgPerML, mgPerKgDOG,mgPerKgCAT
       tableFields: [
         { key: "med", label: "Med", sortable: true, "primary-key": "dodo" },
         // { key: "dosage", label: "Dosage (mg/kg)" },
@@ -69,7 +75,7 @@ export default {
         { key: "forCats", label: "For Cats (ml)" },
         { key: "canGive", label: "Can Give" },
         { key: "q", label: "Q (hours)" },
-        { key: "notes", label: "Notes" }
+        { key: "tabs", label: "Tabs" }
       ],
       weightInput: "89",
       items: [
@@ -124,23 +130,32 @@ export default {
         const forCats = o.cats.join(" to ");
         const canGive = o.canGive.join(", ");
         const q = o.q.join("-");
-        const notes = o.notes;
+        const tabs = o.tabs;
         // const dosage = o.dosage.join("-");
 
-        forTableArray.push({ med, forDogs, forCats, canGive, q, notes });
+        forTableArray.push({ med, forDogs, forCats, canGive, q, tabs });
       });
       return forTableArray;
     }
   },
   methods: {
     // Filters the meds in to { name: 'alsdfj', .... } for the Medication to consume
+    // Fill the `medNamesAndInfo` data property with the medication information.
     arrayOfMedicationsProcess() {
-      // console.log(meds);
+      let medNamesAndInfoInProcess = {};
+
       let medicationsList = [];
       const weight = parseInt(this.weight); // get the actual weight in a number
 
       for (let name in meds) {
         const medInformation = meds[name](weight); // run the function to gather the dosages results
+
+        // populate `medNamesAndInfo`
+        medNamesAndInfoInProcess[name] = {
+          mgPerML: medInformation.mgPerML,
+          mgPerKgDOG: medInformation.mgPerKgDOG.join(" to "),
+          mgPerKgCAT: medInformation.mgPerKgCAT.join(" to ")
+        };
 
         // add the information into the list of medications as an all-self-contained object
         medicationsList.push({
@@ -154,6 +169,11 @@ export default {
        */
       medicationsList = this.filterMedications(medicationsList);
 
+      this.medNamesAndInfo = medNamesAndInfoInProcess;
+
+      console.log("Med Names and info:");
+      console.log(this.medNamesAndInfo);
+
       return medicationsList;
     },
 
@@ -166,4 +186,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#med-info-p {
+  line-height: 0.5;
+}
+</style>
